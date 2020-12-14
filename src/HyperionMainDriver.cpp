@@ -146,7 +146,10 @@ void HyperionMainDriver::load_mesh()
     //ugrid->InsertNextCell(VTK_QUAD, 4, pts[c]);
     // TEST :
     // ugrid->InsertNextCell(cells[c]->GetCellType(), cells[c]->GetPointIds())
-    
+    // TEST 2:
+    // ugrid->InsertNextCell(VTK_QUAD, m_msh_vtk_cells[3*c])
+    // TEST 3:
+    // ugrid->InsertNextCell(VTK_QUAD, points[c])
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   }
 
