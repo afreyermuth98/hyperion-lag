@@ -127,7 +127,9 @@ void HyperionMainDriver::load_mesh()
 
   // Allocate cells
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  std::cout << "Number of cells to allocate :" << std::endl;
   ugrid->Allocate(nb_cells_to_allocate);
+
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   // Get global cells and nodes
@@ -141,7 +143,10 @@ void HyperionMainDriver::load_mesh()
 
     // Insert connectivites, i.e. nodes connected to a cell
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    ugrid->InsertNextCell(VTK_QUAD, 8, pts[0]);
+    //ugrid->InsertNextCell(VTK_QUAD, 4, pts[c]);
+    // TEST :
+    // ugrid->InsertNextCell(cells[c]->GetCellType(), cells[c]->GetPointIds())
+    
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   }
 
