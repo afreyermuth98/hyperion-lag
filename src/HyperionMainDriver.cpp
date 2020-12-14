@@ -113,7 +113,8 @@ void HyperionMainDriver::load_mesh()
 
   // Create a VTK unstructured grid
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // TODO : write code here
+  vtkSmartPointer<vtkUnstructuredGrid> ugrid =
+    vtkSmartPointer<vtkUnstructuredGrid>::New();
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   int nb_cells_to_allocate = 0;
@@ -126,7 +127,7 @@ void HyperionMainDriver::load_mesh()
 
   // Allocate cells
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // TODO : write code here
+  ugrid->Allocate(100);
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   // Get global cells and nodes
@@ -140,7 +141,7 @@ void HyperionMainDriver::load_mesh()
 
     // Insert connectivites, i.e. nodes connected to a cell
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // Write code here
+    ugrid->InsertNextCell(, 8, pts[0]);
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   }
 
