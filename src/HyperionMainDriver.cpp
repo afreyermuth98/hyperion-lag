@@ -44,6 +44,9 @@ void HyperionMainDriver::load_mesh()
 
   if (auto mesh_file_node = m_dataset["Mesh"]["MeshFile"]) {
     gmsh::open(mesh_file_node.as<std::string>());
+    
+    //std::cout << "Mesh file node : " << mesh_file_node << std::endl;
+    // Renvoie tube_100x5.msh
   } else {
     throw std::runtime_error("[Driver::load_mesh] Error : 'MeshFile' property is required");
   }
@@ -127,7 +130,7 @@ void HyperionMainDriver::load_mesh()
 
   // Allocate cells
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  std::cout << "Number of cells to allocate :" << std::endl;
+  std::cout << "Number of cells to allocate :" << nb_cells_to_allocate << std::endl;
   ugrid->Allocate(nb_cells_to_allocate);
 
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

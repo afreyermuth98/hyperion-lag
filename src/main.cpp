@@ -22,7 +22,8 @@
 int main(int argc, char** argv)
 {
   if (argc < 1) {
-    std::cout << "Usage : h2p dataset.yaml\n";
+    std::cout << "Usage : h2p dataset.yaml\n" << std::endl;
+    std::cout << "WARNING : execute in the test/sod folder" << std::endl;
     return 1;
   }
 
