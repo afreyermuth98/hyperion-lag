@@ -35,6 +35,7 @@ void add_cell_field(vtkSmartPointer<vtkUnstructuredGrid> mesh,
   // Create a VTK double array, insert values and attach it to the mesh
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // REF : https://vtk.org/Wiki/VTK/Examples/Cxx/Utilities/ExtractArrayComponent
+  std::cout << "HELLOOOO" << std::endl;
   vtkSmartPointer<vtkDoubleArray> array =
       vtkSmartPointer<vtkDoubleArray>::New();
   

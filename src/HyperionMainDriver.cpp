@@ -135,14 +135,41 @@ void HyperionMainDriver::load_mesh()
 
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  // Get global cells and nodes
+  // Get global cells and nodes<<
   nodes.clear();
   std::vector<std::size_t> cells;
   gmsh::model::mesh::getElementsByType(MSH_QUAD_4, cells, nodes);
 
+
+  std::cout << "Il y a " << points->GetNumberOfPoints() << "points" << std::endl;
+
+  std::cout << "Info sur les points :" << std::endl;
+
+  std::cout << points[0] << std::endl;
+
+  double test[4];
+  points->GetPoint(0, test);
+  std::cout << "Point 0 : (" << test[0] << " " << test[1] << " " << test[2] << " " << test[3] << std::endl;
+
+  points->GetPoint(1, test);
+  std::cout << "Point 1 : (" << test[0] << " " << test[1] << " " << test[2] << " " << test[3] << std::endl;
+
+  points->GetPoint(0, test);
+  std::cout << "Point 2 : (" << test[0] << " " << test[1] << " " << test[2] << " " << test[3] << std::endl;
+
+  std::cout << "Cells : " << cells[0] << std::endl;
+  std::cout << "Test " << nodes[1] << std::endl;
+  // std::cout << "Cells 0" << cells[0] << std::endl;
+
+
   for (std::size_t c = 0; c < cells.size(); ++c) {
     m_msh_vtk_cells[cells[c]] = c;
     m_vtk_msh_cells[c] = cells[c];
+
+    //std::cout << c << " " << cells[c] << std::endl;
+    // std::cout << points[c] << std::endl;
+
+    ugrid->SetCells(VTK_QUAD, cells);
 
     // Insert connectivites, i.e. nodes connected to a cell
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
