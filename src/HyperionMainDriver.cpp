@@ -140,7 +140,7 @@ void HyperionMainDriver::load_mesh()
   std::vector<std::size_t> cells;
   gmsh::model::mesh::getElementsByType(MSH_QUAD_4, cells, nodes);
 
-
+/* Debug print :
   std::cout << "Il y a " << points->GetNumberOfPoints() << "points" << std::endl;
 
   std::cout << "Info sur les points :" << std::endl;
@@ -157,30 +157,32 @@ void HyperionMainDriver::load_mesh()
   points->GetPoint(0, test);
   std::cout << "Point 2 : (" << test[0] << " " << test[1] << " " << test[2] << " " << test[3] << std::endl;
 
-  std::cout << "Cells : " << cells[0] << std::endl;
   std::cout << "Test " << nodes[1] << std::endl;
-  // std::cout << "Cells 0" << cells[0] << std::endl;
-
+*/
 
   for (std::size_t c = 0; c < cells.size(); ++c) {
     m_msh_vtk_cells[cells[c]] = c;
     m_vtk_msh_cells[c] = cells[c];
 
-    //std::cout << c << " " << cells[c] << std::endl;
-    // std::cout << points[c] << std::endl;
+/* Debug prints : 
+    std::cout << c << " " << cells[c] << " " << nodes[c] << std::endl;
+    int numero_cellule = cells[c];
+    //std::cout << "Nodes[" << numero_cellule << "] " << nodes[numero_cellule] << std::endl;
+    std::cout << "Coords " << nodes[c*4] << " " << nodes[c*4+1] << " " << nodes[c*4+2] << " " << nodes[c*4+3] << std::endl;
+    points->GetPoint(nodes[c*4], test);
+    std::cout << "Pointtt : (" << test[0] << " " << test[1] << " " << test[2] << " " << test[3] << std::endl;
+    std::cout << "----------------------" << std::endl;
+    */
+    
+    vtkIdType testPoint[4] = {
+                              nodes[c*4],
+                              nodes[c*4+1],
+                              nodes[c*4+2],
+                              nodes[c*4+3]
+                              };
+    ugrid->InsertNextCell(VTK_QUAD, 4, testPoint);
+    
 
-    ugrid->SetCells(VTK_QUAD, cells);
-
-    // Insert connectivites, i.e. nodes connected to a cell
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //ugrid->InsertNextCell(VTK_QUAD, 4, pts[c]);
-    // TEST :
-    // ugrid->InsertNextCell(cells[c]->GetCellType(), cells[c]->GetPointIds())
-    // TEST 2:
-    // ugrid->InsertNextCell(VTK_QUAD, m_msh_vtk_cells[3*c])
-    // TEST 3:
-    // ugrid->InsertNextCell(VTK_QUAD, points[c])
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   }
 
   gmsh::finalize();
