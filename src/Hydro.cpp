@@ -35,10 +35,22 @@ void add_cell_field(vtkSmartPointer<vtkUnstructuredGrid> mesh,
   // Create a VTK double array, insert values and attach it to the mesh
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // REF : https://vtk.org/Wiki/VTK/Examples/Cxx/Utilities/ExtractArrayComponent
-  std::cout << "HELLOOOO" << std::endl;
+
+
+  const char *name = field_name.data();
+
+  std::vector<double> vector;
+  vector = field;
+
   vtkSmartPointer<vtkDoubleArray> array =
       vtkSmartPointer<vtkDoubleArray>::New();
-  
+  array->SetName(name);
+  array->SetNumberOfComponents(3); // Because it's vector
+  for (int i =0; i<vector.size(); i++) {
+    array->InsertNextValue(vector[i]);
+  }
+
+  mesh->GetPointData()->AddArray(array);
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
@@ -50,8 +62,22 @@ void add_node_field(vtkSmartPointer<vtkUnstructuredGrid> mesh,
                     const std::string& field_name)
 {
   // Create a VTK double array, insert values and attach it to the mesh
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // TODO : write code here
+  
+  const char *name = field_name.data();
+
+  std::vector<double> vector;
+  vector = field;
+
+  vtkSmartPointer<vtkDoubleArray> array =
+      vtkSmartPointer<vtkDoubleArray>::New();
+  array->SetName(name);
+  array->SetNumberOfComponents(3); // Because it's vector
+  for (int i =0; i<vector.size(); i++) {
+    array->InsertNextValue(vector[i]);
+  }
+
+  mesh->GetPointData()->AddArray(array);
+
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
@@ -63,8 +89,24 @@ void add_vector_node_field(vtkSmartPointer<vtkUnstructuredGrid> mesh,
                            const std::string& field_name)
 {
   // Create a VTK double array, insert values and attach it to the mesh
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // TODO : write code here
+  
+  const char *name = field_name.data();
+
+  std::vector<std::pair<double, double>> vector;
+  vector = field;
+
+  vtkSmartPointer<vtkDoubleArray> array =
+      vtkSmartPointer<vtkDoubleArray>::New();
+  array->SetName(name);
+  array->SetNumberOfComponents(3); // Because it's vector
+  for (int i =0; i<vector.size(); i++) {
+    array->InsertNextValue(vector[i].first);
+    array->InsertNextValue(vector[i].second);
+
+  }
+
+  mesh->GetPointData()->AddArray(array);
+
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
@@ -91,8 +133,11 @@ void Hydro::init()
   m_dt_staggered = m_dt / 2.0;
 
   // Load initial node coordinates
+  std::cout << "Nb nodes :" << m_vars->m_nb_nodes << std::endl;
+
   for (int n = 0; n < m_vars->m_nb_nodes; ++n) {
     double coord[3];
+    std::cout << "Nodes[i] " << m_mesh->GetPoints()->GetPoint(n,coord) << std::endl;
 
     // Get node n coordinates and save them to m_vars->m_node_coord
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
