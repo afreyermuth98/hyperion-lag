@@ -117,6 +117,9 @@ void HyperionMainDriver::load_mesh()
   // Create a VTK unstructured grid
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   m_mesh = vtkSmartPointer<vtkUnstructuredGrid>::New();
+  
+  m_mesh->SetPoints(points); 
+
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   int nb_cells_to_allocate = 0;
@@ -197,19 +200,13 @@ void HyperionMainDriver::load_mesh()
 int HyperionMainDriver::run()
 {
   std::cout << "Start of run" << std::endl;
-  std::cout << "NumberOfCells " << m_mesh->GetNumberOfCells();
-  std::cout << " NumberOfPoints " << m_mesh->GetNumberOfPoints() << std::endl;
 
   auto vars = new HydroVars(m_mesh->GetNumberOfCells(),
                             m_mesh->GetNumberOfPoints());
-  std::cout << "0";
 
   vars->setup_sod(m_dataset, m_cell_envs, m_vtk_msh_cells);
-  std::cout << "1";
   auto hydro = new Hydro(m_dataset, m_mesh, vars);
-  std::cout << "2";
   hydro->init();
-  std::cout << "3";
 
   std::cout << "[Driver::run] Simulation initialized, starting time loop\n";
 
