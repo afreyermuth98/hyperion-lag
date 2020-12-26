@@ -116,8 +116,7 @@ void HyperionMainDriver::load_mesh()
 
   // Create a VTK unstructured grid
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  vtkSmartPointer<vtkUnstructuredGrid> ugrid =
-    vtkSmartPointer<vtkUnstructuredGrid>::New();
+  m_mesh = vtkSmartPointer<vtkUnstructuredGrid>::New();
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   int nb_cells_to_allocate = 0;
@@ -131,7 +130,7 @@ void HyperionMainDriver::load_mesh()
   // Allocate cells
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   std::cout << "Number of cells to allocate :" << nb_cells_to_allocate << std::endl;
-  ugrid->Allocate(nb_cells_to_allocate);
+  m_mesh->Allocate(nb_cells_to_allocate);
 
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -173,6 +172,8 @@ void HyperionMainDriver::load_mesh()
     std::cout << "Pointtt : (" << test[0] << " " << test[1] << " " << test[2] << " " << test[3] << std::endl;
     std::cout << "----------------------" << std::endl;
     */
+
+   
     
     vtkIdType testPoint[4] = {
                               nodes[c*4],
@@ -180,8 +181,8 @@ void HyperionMainDriver::load_mesh()
                               nodes[c*4+2],
                               nodes[c*4+3]
                               };
-    ugrid->InsertNextCell(VTK_QUAD, 4, testPoint);
-    
+    m_mesh->InsertNextCell(VTK_QUAD, 4, testPoint);
+
 
   }
 
@@ -195,12 +196,20 @@ void HyperionMainDriver::load_mesh()
 
 int HyperionMainDriver::run()
 {
+  std::cout << "Start of run" << std::endl;
+  std::cout << "NumberOfCells " << m_mesh->GetNumberOfCells();
+  std::cout << " NumberOfPoints " << m_mesh->GetNumberOfPoints() << std::endl;
+
   auto vars = new HydroVars(m_mesh->GetNumberOfCells(),
                             m_mesh->GetNumberOfPoints());
-  vars->setup_sod(m_dataset, m_cell_envs, m_vtk_msh_cells);
+  std::cout << "0";
 
+  vars->setup_sod(m_dataset, m_cell_envs, m_vtk_msh_cells);
+  std::cout << "1";
   auto hydro = new Hydro(m_dataset, m_mesh, vars);
+  std::cout << "2";
   hydro->init();
+  std::cout << "3";
 
   std::cout << "[Driver::run] Simulation initialized, starting time loop\n";
 
