@@ -264,9 +264,14 @@ void Hydro::compute_pressure_force()
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // TODO : write code here
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    int nb_nodes_for_cell = 1; // Change this line to get the correct number of nodes
+    vtkSmartPointer<vtkIdList> points = 
+              vtkSmartPointer<vtkIdList>::New();
+    m_mesh->GetCellPoints(c, points);
+
+
+    int nb_nodes_for_cell = points->GetNumberOfIds(); // Change this line to get the correct number of nodes
     for (int n = 0; n < nb_nodes_for_cell; ++n) {
-      auto node = n; // Change this line to get the global node id
+      auto node = points->GetId(n); // Change this line to get the global node id
       double force = m_vars->m_pressure[c] +
                      m_vars->m_artificial_viscosity[c] * 20.0;
       m_vars->m_force[node].first += force * m_vars->m_cqs[c][n].first;
@@ -349,14 +354,20 @@ void Hydro::apply_boundary_condition(const std::map<int, std::vector<std::string
 
 void Hydro::move_nodes()
 {
+  auto points = m_mesh->GetPoints();
   for (int n = 0; n < m_vars->m_nb_nodes; ++n) {
     m_vars->m_node_coord[n].first += m_dt * m_vars->m_velocity[n].first;
     m_vars->m_node_coord[n].second += m_dt * m_vars->m_velocity[n].second;
     // Update m_mesh node positions
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // TODO : write code here
+
+    double m_node_coords[2] = {m_vars->m_node_coord[n].first,
+                        m_vars->m_node_coord[n].second};
+    points->SetPoint(n, m_node_coords);
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   }
+
 }
 
 /*---------------------------------------------------------------------------*/
@@ -436,6 +447,9 @@ void Hydro::dump(int step, double simulation_time)
   // Write the solutions to file_name
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // TODO : write code here
+  m_writer->SetFileName(file_name.c_str());
+  m_writer->SetInputData(m_mesh);
+  m_writer->Write();
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
