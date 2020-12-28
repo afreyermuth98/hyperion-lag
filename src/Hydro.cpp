@@ -45,7 +45,7 @@ void add_cell_field(vtkSmartPointer<vtkUnstructuredGrid> mesh,
   vtkSmartPointer<vtkDoubleArray> array =
       vtkSmartPointer<vtkDoubleArray>::New();
   array->SetName(name);
-  array->SetNumberOfComponents(3); // Because it's vector
+  array->SetNumberOfComponents(1); 
   for (int i =0; i<vector.size(); i++) {
     array->InsertNextValue(vector[i]);
   }
@@ -71,7 +71,7 @@ void add_node_field(vtkSmartPointer<vtkUnstructuredGrid> mesh,
   vtkSmartPointer<vtkDoubleArray> array =
       vtkSmartPointer<vtkDoubleArray>::New();
   array->SetName(name);
-  array->SetNumberOfComponents(3); // Because it's vector
+  array->SetNumberOfComponents(1); // Because it's vector
   for (int i =0; i<vector.size(); i++) {
     array->InsertNextValue(vector[i]);
   }
@@ -98,11 +98,11 @@ void add_vector_node_field(vtkSmartPointer<vtkUnstructuredGrid> mesh,
   vtkSmartPointer<vtkDoubleArray> array =
       vtkSmartPointer<vtkDoubleArray>::New();
   array->SetName(name);
-  array->SetNumberOfComponents(3); // Because it's vector
+  array->SetNumberOfComponents(2); // Because it's vector
   for (int i =0; i<vector.size(); i++) {
-    array->InsertNextValue(vector[i].first);
-    array->InsertNextValue(vector[i].second);
-
+    //array->InsertNextValue(vector[i].first);
+    //array->InsertNextValue(vector[i].second);
+    array->InsertNextTuple2(vector[i].first, vector[i].second);
   }
 
   mesh->GetPointData()->AddArray(array);
@@ -137,11 +137,14 @@ void Hydro::init()
 
   for (int n = 0; n < m_vars->m_nb_nodes; ++n) {
     double coord[3];
-    std::cout << "Nodes[i] " << m_mesh->GetPoints()->GetPoint(n,coord) << std::endl;
+
+    //std::cout << "Nodes[i] " << m_mesh->GetPoints()->GetPoint(n,coord) << std::endl;
 
     // Get node n coordinates and save them to m_vars->m_node_coord
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // TODO : write code here
+    m_mesh->GetPoint(n, coord);
+
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   }
 
@@ -153,13 +156,18 @@ void Hydro::init()
     m_vars->m_cell_mass[c] = m_vars->m_density[c] * m_vars->m_cell_volume[c];
     double node_mass_contrib = 0.25 * m_vars->m_cell_mass[c];
 
+
+    vtkSmartPointer<vtkIdList> points = 
+                vtkSmartPointer<vtkIdList>::New();
+    m_mesh->GetCellPoints(c, points);
     // Get cell c to retrieve its node ids
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // TODO : write code here
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    int nb_nodes_for_cell = 1; // Change this line to get the correct number of nodes
+    
+    int nb_nodes_for_cell = points->GetNumberOfIds(); // Change this line to get the correct number of nodes
     for (int n = 0; n < nb_nodes_for_cell; ++n) {
-      auto node = n; // Change this line to get the global node id
+      auto node = points->GetId(n); // Change this line to get the global node id
       m_vars->m_node_mass[node] += node_mass_contrib;
     }
   }
@@ -191,12 +199,18 @@ void Hydro::compute_volume()
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // TODO : write code here
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    int nb_nodes_of_cell = 1; // Change this line to get the correct number of nodes
+    vtkSmartPointer<vtkIdList> points = 
+              vtkSmartPointer<vtkIdList>::New();
+    m_mesh->GetCellPoints(c, points);
+
+    int nb_nodes_of_cell = points->GetNumberOfIds(); // Change this line to get the correct number of nodes
     for (int n = 0; n < nb_nodes_of_cell; ++n) {
       double p[3];
       // Get node n coordinates
       // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       // TODO : write code here
+
+      m_mesh->GetPoint(points->GetId(n), p);
       // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       coord[n] = std::make_pair(p[0], p[1]);
     }
