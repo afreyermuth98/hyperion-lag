@@ -144,6 +144,9 @@ void Hydro::init()
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // TODO : write code here
     m_mesh->GetPoint(n, coord);
+    std::pair<double, double> coordPair;
+    coordPair =  {coord[0], coord[1]};
+    m_vars->m_node_coord.push_back(coordPair);
 
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   }
