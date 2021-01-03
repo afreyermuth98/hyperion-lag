@@ -50,7 +50,7 @@ void add_cell_field(vtkSmartPointer<vtkUnstructuredGrid> mesh,
     array->InsertNextValue(vector[i]);
   }
 
-  mesh->GetPointData()->AddArray(array);
+  mesh->GetCellData()->AddArray(array);
 }
 
 //----------------------------------------------------------------------------
@@ -411,6 +411,14 @@ void Hydro::dump(int step, double simulation_time)
 
   // Attach the simulation time to the mesh
   // DONE
+
+  vtkSmartPointer<vtkDoubleArray> =
+      vtkSmartPointer<vtkDoubleArray>::New();
+
+  time->SetNumberOfComponents(1);
+  time->SetName("Time");
+  time->InsertNextValue(simulation_time);
+  m_mesh->GetFieldData()->AddArray(time);
 
   add_cell_field(m_mesh, m_vars->m_pressure, "Pressure");
   add_cell_field(m_mesh, m_vars->m_artificial_viscosity, "ArtificialViscosity");
