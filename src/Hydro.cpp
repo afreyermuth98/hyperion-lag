@@ -33,7 +33,7 @@ void add_cell_field(vtkSmartPointer<vtkUnstructuredGrid> mesh,
                     const std::string& field_name)
 {
   // Create a VTK double array, insert values and attach it to the mesh
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // DONE
   // REF : https://vtk.org/Wiki/VTK/Examples/Cxx/Utilities/ExtractArrayComponent
 
 
@@ -51,7 +51,6 @@ void add_cell_field(vtkSmartPointer<vtkUnstructuredGrid> mesh,
   }
 
   mesh->GetPointData()->AddArray(array);
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
 //----------------------------------------------------------------------------
@@ -62,7 +61,7 @@ void add_node_field(vtkSmartPointer<vtkUnstructuredGrid> mesh,
                     const std::string& field_name)
 {
   // Create a VTK double array, insert values and attach it to the mesh
-  
+  // DONE
   const char *name = field_name.data();
 
   std::vector<double> vector;
@@ -71,14 +70,13 @@ void add_node_field(vtkSmartPointer<vtkUnstructuredGrid> mesh,
   vtkSmartPointer<vtkDoubleArray> array =
       vtkSmartPointer<vtkDoubleArray>::New();
   array->SetName(name);
-  array->SetNumberOfComponents(1); // Because it's vector
+  array->SetNumberOfComponents(1); 
   for (int i =0; i<vector.size(); i++) {
     array->InsertNextValue(vector[i]);
   }
 
   mesh->GetPointData()->AddArray(array);
 
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
 //----------------------------------------------------------------------------
@@ -89,7 +87,7 @@ void add_vector_node_field(vtkSmartPointer<vtkUnstructuredGrid> mesh,
                            const std::string& field_name)
 {
   // Create a VTK double array, insert values and attach it to the mesh
-  
+  // DONE
   const char *name = field_name.data();
 
   std::vector<std::pair<double, double>> vector;
@@ -98,16 +96,12 @@ void add_vector_node_field(vtkSmartPointer<vtkUnstructuredGrid> mesh,
   vtkSmartPointer<vtkDoubleArray> array =
       vtkSmartPointer<vtkDoubleArray>::New();
   array->SetName(name);
-  array->SetNumberOfComponents(2); // Because it's vector
+  array->SetNumberOfComponents(2); 
   for (int i =0; i<vector.size(); i++) {
-    //array->InsertNextValue(vector[i].first);
-    //array->InsertNextValue(vector[i].second);
     array->InsertNextTuple2(vector[i].first, vector[i].second);
   }
 
   mesh->GetPointData()->AddArray(array);
-
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
 /*---------------------------------------------------------------------------*/
@@ -138,17 +132,13 @@ void Hydro::init()
   for (int n = 0; n < m_vars->m_nb_nodes; ++n) {
     double coord[3];
 
-    //std::cout << "Nodes[i] " << m_mesh->GetPoints()->GetPoint(n,coord) << std::endl;
-
     // Get node n coordinates and save them to m_vars->m_node_coord
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // TODO : write code here
+    // DONE
     m_mesh->GetPoint(n, coord);
     std::pair<double, double> coordPair;
     coordPair =  {coord[0], coord[1]};
     m_vars->m_node_coord.push_back(coordPair);
 
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   }
 
   // Initialize cell volume
@@ -164,9 +154,7 @@ void Hydro::init()
                 vtkSmartPointer<vtkIdList>::New();
     m_mesh->GetCellPoints(c, points);
     // Get cell c to retrieve its node ids
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // TODO : write code here
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // DONE
     
     int nb_nodes_for_cell = points->GetNumberOfIds(); // Change this line to get the correct number of nodes
     for (int n = 0; n < nb_nodes_for_cell; ++n) {
@@ -199,9 +187,7 @@ void Hydro::compute_volume()
     // Cache local coordinates;
 
     // Get cell c to retrieve its nodes
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // TODO : write code here
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // DONE
     vtkSmartPointer<vtkIdList> points = 
               vtkSmartPointer<vtkIdList>::New();
     m_mesh->GetCellPoints(c, points);
@@ -210,11 +196,9 @@ void Hydro::compute_volume()
     for (int n = 0; n < nb_nodes_of_cell; ++n) {
       double p[3];
       // Get node n coordinates
-      // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      // TODO : write code here
+      // DONE
 
       m_mesh->GetPoint(points->GetId(n), p);
-      // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       coord[n] = std::make_pair(p[0], p[1]);
     }
 
@@ -264,9 +248,7 @@ void Hydro::compute_pressure_force()
 
   for (int c = 0; c < m_vars->m_nb_cells; ++c) {
     // Get cell c to retrieve its node ids
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // TODO : write code here
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // DONE
     vtkSmartPointer<vtkIdList> points = 
               vtkSmartPointer<vtkIdList>::New();
     m_mesh->GetCellPoints(c, points);
@@ -362,13 +344,11 @@ void Hydro::move_nodes()
     m_vars->m_node_coord[n].first += m_dt * m_vars->m_velocity[n].first;
     m_vars->m_node_coord[n].second += m_dt * m_vars->m_velocity[n].second;
     // Update m_mesh node positions
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // TODO : write code here
+    // DONE
 
     double m_node_coords[2] = {m_vars->m_node_coord[n].first,
                         m_vars->m_node_coord[n].second};
     points->SetPoint(n, m_node_coords);
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   }
 
 }
@@ -430,9 +410,7 @@ void Hydro::dump(int step, double simulation_time)
     << simulation_time << " s -- Time step : " << m_dt << " s\n";
 
   // Attach the simulation time to the mesh
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // TODO : write code here
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // DONE
 
   add_cell_field(m_mesh, m_vars->m_pressure, "Pressure");
   add_cell_field(m_mesh, m_vars->m_artificial_viscosity, "ArtificialViscosity");
@@ -448,12 +426,10 @@ void Hydro::dump(int step, double simulation_time)
   std::string file_name = "HydroLag." + std::to_string(step) + ".vtu";
 
   // Write the solutions to file_name
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // TODO : write code here
+  // DONE
   m_writer->SetFileName(file_name.c_str());
   m_writer->SetInputData(m_mesh);
   m_writer->Write();
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
 /*---------------------------------------------------------------------------*/

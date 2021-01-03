@@ -99,28 +99,17 @@ void HyperionMainDriver::load_mesh()
   std::cout << "[Driver::load_mesh] Done reading mesh\n";
   std::cout << "[Driver::load_mesh] Initializing a VTK unstructured grid\n";
 
-  // Create VTK points
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // coords [X0, Y0, Z0, ..., Xn, Yn, Zn]
-  // nodes [0,1,2,25,32, ...]
+  // Create VTK points and insert points from Gmsh node coordinates
+  // DONE
   auto points = vtkSmartPointer<vtkPoints>::New();
   for (int n = 0; n < nodes.size(); ++n) {
     points->InsertPoint(nodes[n] - 1, coords[n * 3 + 0], coords[n * 3 + 1], coords[n * 3 + 2]);
   }
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  // Insert points from Gmsh node coordinates
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  // Done before
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   // Create a VTK unstructured grid
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // DONE
   m_mesh = vtkSmartPointer<vtkUnstructuredGrid>::New();
-  
   m_mesh->SetPoints(points); 
-
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   int nb_cells_to_allocate = 0;
   {
@@ -131,53 +120,21 @@ void HyperionMainDriver::load_mesh()
   }
 
   // Allocate cells
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // DONE
   std::cout << "Number of cells to allocate :" << nb_cells_to_allocate << std::endl;
   m_mesh->Allocate(nb_cells_to_allocate);
-
-  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   // Get global cells and nodes<<
   nodes.clear();
   std::vector<std::size_t> cells;
   gmsh::model::mesh::getElementsByType(MSH_QUAD_4, cells, nodes);
 
-/* Debug print :
-  std::cout << "Il y a " << points->GetNumberOfPoints() << "points" << std::endl;
-
-  std::cout << "Info sur les points :" << std::endl;
-
-  std::cout << points[0] << std::endl;
-
-  double test[4];
-  points->GetPoint(0, test);
-  std::cout << "Point 0 : (" << test[0] << " " << test[1] << " " << test[2] << " " << test[3] << std::endl;
-
-  points->GetPoint(1, test);
-  std::cout << "Point 1 : (" << test[0] << " " << test[1] << " " << test[2] << " " << test[3] << std::endl;
-
-  points->GetPoint(0, test);
-  std::cout << "Point 2 : (" << test[0] << " " << test[1] << " " << test[2] << " " << test[3] << std::endl;
-
-  std::cout << "Test " << nodes[1] << std::endl;
-*/
-
   for (std::size_t c = 0; c < cells.size(); ++c) {
     m_msh_vtk_cells[cells[c]] = c;
     m_vtk_msh_cells[c] = cells[c];
-
-/* Debug prints : 
-    std::cout << c << " " << cells[c] << " " << nodes[c] << std::endl;
-    int numero_cellule = cells[c];
-    //std::cout << "Nodes[" << numero_cellule << "] " << nodes[numero_cellule] << std::endl;
-    std::cout << "Coords " << nodes[c*4] << " " << nodes[c*4+1] << " " << nodes[c*4+2] << " " << nodes[c*4+3] << std::endl;
-    points->GetPoint(nodes[c*4], test);
-    std::cout << "Pointtt : (" << test[0] << " " << test[1] << " " << test[2] << " " << test[3] << std::endl;
-    std::cout << "----------------------" << std::endl;
-    */
-
    
-    
+    // Insert connectivites, i.e. nodes connected to a cell
+    // DONE
     vtkIdType testPoint[4] = {
                               nodes[c*4],
                               nodes[c*4+1],
