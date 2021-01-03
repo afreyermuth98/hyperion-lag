@@ -412,13 +412,13 @@ void Hydro::dump(int step, double simulation_time)
   // Attach the simulation time to the mesh
   // DONE
 
-  vtkSmartPointer<vtkDoubleArray> =
+  vtkSmartPointer<vtkDoubleArray> time_array =
       vtkSmartPointer<vtkDoubleArray>::New();
 
-  time->SetNumberOfComponents(1);
-  time->SetName("Time");
-  time->InsertNextValue(simulation_time);
-  m_mesh->GetFieldData()->AddArray(time);
+  time_array->SetNumberOfComponents(1);
+  time_array->SetName("Time");
+  time_array->InsertNextValue(simulation_time);
+  m_mesh->GetFieldData()->AddArray(time_array);
 
   add_cell_field(m_mesh, m_vars->m_pressure, "Pressure");
   add_cell_field(m_mesh, m_vars->m_artificial_viscosity, "ArtificialViscosity");
