@@ -1,3 +1,6 @@
+# Membre : Anthony FREYERMUTH
+# NB : N'ayant pas la VM par soucis d'espace disque, j'ai codé à l'aveugle sans pouvoir savoir si mon code compilait / fonctionnait
+
 # HyPERION-lag
 
 This is **HyPERION**, as in *Hydrodynamics Platform for Exascale Research, In situ analysis and OptimizatioN* - Lagrangian variant
